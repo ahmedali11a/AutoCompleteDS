@@ -7,16 +7,17 @@ using namespace std;
 class Trie
 {
 	Node* root;
+	bool Search(string Word, string Type);
 
 public:
-	void Insert(string Word);
-	bool Search(string Word);
+	Trie();
+	void Insert(string Word);	
 	void DeleteWord(string Word);
 	void DisplayByBFS(string Prefix);
-	void DisplayByDFS(string Prefix);
+	void DisplayByDFS(Node*node,string Prefix);
 	void DisplayByFrequecy(string Prefix);
 	Node* FindNode(string Prefix);
 	string CaseSensitivity(string Word);
-	bool ValidatWord(string Word);
+	bool ValidateWord(string Word);
 };
 
