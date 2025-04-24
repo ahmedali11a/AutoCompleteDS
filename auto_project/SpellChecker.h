@@ -8,7 +8,7 @@ class SpellChecker
 {
 public:
 	int ComputeUnsimilarity(string Word1, string word2);
-	vector<string> DisplayCloseSuggestions(string word, vector<string> AvailableWords);
+	void DisplayCloseSuggestions(string word, vector<string> AvailableWords);
 
 };
 

@@ -1,11 +1,13 @@
 #include "Trie.h"
 #include<iostream>
 #include<queue>
+#include<stack>
+#include<string>
 #include<algorithm>
 
 Trie::Trie()
 {
-    root = NULL;
+    root = new Node();
 }
 
 void Trie::Insert(string Word)
@@ -14,17 +16,20 @@ void Trie::Insert(string Word)
     Word = CaseSensitivity(Word);
 
     if (!ValidateWord(Word))
+    {
+        cout << "The Word \"" << Word << "\" Invalid\n";
         return;
+    }
 
     if (Search(Word,"word"))
-        cout << "The Word \" " << Word << "\" Already Exist\n";
+        cout << "The Word \"" << Word << "\" Already Exist\n";
 
     Node* current = root;
 
     for (char letter : Word)
     {
         if (!current->letters[letter])
-            current->letters[letter] = new Node;
+            current->letters[letter] = new Node();
 
         current = current->letters[letter];
 
@@ -71,12 +76,17 @@ void Trie::DisplayByBFS(string Prefix)
     Prefix = CaseSensitivity(Prefix);
 
     if (!ValidateWord(Prefix))
+    {
+        cout << "The Word \"" << Prefix << "\" Invalid\n";
         return;
+    }
 
   
-    if (!Search(Prefix,"prefix"))
+    if (!Search(Prefix, "prefix"))
+    {
+        cout << "The Word \"" << Prefix << "\" Doesn't Exist\n";
         return;
-
+    }
     Node* Current = root;
 
     for (char letter : Prefix)
@@ -97,7 +107,12 @@ void Trie::DisplayByBFS(string Prefix)
         string Word = front.second;
 
         if (node->EndWord)
-            cout << Word << endl;
+        {
+            if (Word == Prefix)
+                cout << "*" << Word << "*" << endl;
+            else
+                cout << Word << endl;
+        }
 
 
         for (auto pair : node->letters)
@@ -106,43 +121,72 @@ void Trie::DisplayByBFS(string Prefix)
     }
 }
 
-void Trie::DisplayByDFS(Node*node,string Prefix)
+void Trie::DisplayByDFS(string Prefix)
 {
     Prefix = CaseSensitivity(Prefix);
 
     if (!ValidateWord(Prefix))
+    {
+        cout << "The Word \"" << Prefix << "\" Invalid\n";
         return;
+    }
 
     if (!Search(Prefix, "prefix"))
+    {
+        cout << "The Word \"" << Prefix << "\" Doesn't Exist\n";
         return;
+    }
 
+    Node* startNode = FindNode(Prefix);
+    string currentWord = Prefix;
 
+   
+    stack<pair<Node*, string>> nodeStack;
+    nodeStack.push({ startNode, currentWord });
 
-    if (node->EndWord)
-        cout << Prefix << endl;
+    while (!nodeStack.empty()) {
+        auto pair = nodeStack.top();
 
-    for (auto pair : node->letters)
-        DisplayByDFS(pair.second, Prefix + pair.first);
+        Node* node = pair.first;
+        string word = pair.second;
 
+        nodeStack.pop();
+
+        
+        if (node->EndWord) 
+        {
+            if (word == Prefix)
+                cout << "*" << word << "*" << endl;
+            else
+                cout << word << endl;
+        }
+
+      
+        for (auto& pair : node->letters) {
+            nodeStack.push({ pair.second, word + pair.first });
+        }
+    }
 }
+
 
 void Trie::DisplayByFrequecy(string Prefix)
 {
     Prefix = CaseSensitivity(Prefix);
 
     if (!ValidateWord(Prefix))
+    {
+        cout << "The Word \"" << Prefix << "\" Invalid\n";
         return;
+    }
 
 
     if (!Search(Prefix, "prefix"))
-        return;
-
-    Node* Current = root;
-
-    for (char letter : Prefix)
     {
-        Current = Current->letters[letter];
+        cout << "The Word \"" << Prefix << "\" Doesn't Exist\n";
+        return;
     }
+
+    Node* Current = FindNode(Prefix);
 
     queue<pair<Node*, string>> q;
 
@@ -172,8 +216,13 @@ void Trie::DisplayByFrequecy(string Prefix)
         });
 
 
-    for (const auto &pair : WordsAndFrequency)
-        cout << pair.first << endl;
+    for (const auto& pair : WordsAndFrequency)
+    {
+        if (pair.first == Prefix)
+            cout << "*" << pair.first << "*" << endl;
+        else
+            cout << pair.first << endl;
+    }
 
 }
 
@@ -198,6 +247,16 @@ Node* Trie::FindNode(string Prefix)
     }
 
     return Current;
+}
+
+bool Trie::FindType(string prefix)
+{
+    Node* Current = FindNode(prefix);
+
+    if (Current->EndWord)
+        return false;
+    else
+        return true;
 }
 
 string Trie::CaseSensitivity(string Word)

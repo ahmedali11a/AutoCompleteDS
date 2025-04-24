@@ -14,9 +14,10 @@ public:
 	void Insert(string Word);	
 	void DeleteWord(string Word);
 	void DisplayByBFS(string Prefix);
-	void DisplayByDFS(Node*node,string Prefix);
+	void DisplayByDFS(string Prefix);
 	void DisplayByFrequecy(string Prefix);
 	Node* FindNode(string Prefix);
+	bool FindType(string prefix);
 	string CaseSensitivity(string Word);
 	bool ValidateWord(string Word);
 };
