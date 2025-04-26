@@ -195,9 +195,9 @@ void Trie::DisplayByDFS(string Prefix)
     nodeStack.push({ startNode, currentWord });
 
     while (!nodeStack.empty()) {
-        auto pair = nodeStack.top();
-        Node* node = pair.first;
-        string word = pair.second;
+        auto pairTop = nodeStack.top();
+        Node* node = pairTop.first;
+        string word = pairTop.second;
         nodeStack.pop();
 
         if (node->EndWord) {
@@ -207,7 +207,7 @@ void Trie::DisplayByDFS(string Prefix)
                 cout << word << endl;
         }
 
-        // Sort the children in reverse lexicographical order for correct stack-based DFS
+       
         vector<pair<char, Node*>> sortedLetters(node->letters.begin(), node->letters.end());
         sort(sortedLetters.rbegin(), sortedLetters.rend());
 

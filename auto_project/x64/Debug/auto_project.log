@@ -1,6 +1,2 @@
-﻿  Trie.cpp
-C:\Users\workstation\source\repos\AutoCompleteDS\auto_project\Trie.cpp(216,21): error C2062: type 'char' unexpected
-C:\Users\workstation\source\repos\AutoCompleteDS\auto_project\Trie.cpp(216,32): error C2059: syntax error: '>'
-C:\Users\workstation\source\repos\AutoCompleteDS\auto_project\Trie.cpp(218,24): error C2065: 'children': undeclared identifier
-C:\Users\workstation\source\repos\AutoCompleteDS\auto_project\Trie.cpp(218,43): error C3536: 'it': cannot be used before it is initialized
-C:\Users\workstation\source\repos\AutoCompleteDS\auto_project\Trie.cpp(218,49): error C2065: 'children': undeclared identifier
+﻿  Source.cpp
+  auto_project.vcxproj -> E:\Project_DS\AutoCompleteDS\x64\Debug\auto_project.exe

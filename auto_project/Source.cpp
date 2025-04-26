@@ -10,7 +10,7 @@ int main()
 {
 
     Trie trie;
-    Files fileHandler("C:\\Users\\workstation\\source\\repos\\AutoCompleteDS\\Dictionary.txt");
+    Files fileHandler("Dictionary.txt");
     fileHandler.Load(trie);
     string input;
     int choice, sortOption;
