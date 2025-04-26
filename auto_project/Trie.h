@@ -13,11 +13,12 @@ class Trie
 
 public:
 	Trie();
+	void IncreaseFrequency(string Word);
 	void Insert(string Word, bool isInsertFromFile);
 	void DeleteWord(string Word);
-	void DisplayByBFS(string Prefix);
-	void DisplayByDFS(string Prefix);
-	void DisplayByFrequecy(string Prefix);
+	vector<string> DisplayByBFS(string Prefix);
+	vector<string> DisplayByDFS(string Prefix);
+	vector<string> DisplayByFrequecy(string Prefix);
 	Node* FindNode(string Prefix);
 	void saveToFiles(string Prefix,vector<pair<string, int>>& words);
 	void getsuggestions(string Prefix,int operation);

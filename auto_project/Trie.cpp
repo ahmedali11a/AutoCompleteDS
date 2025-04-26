@@ -12,6 +12,22 @@ Trie::Trie()
     root = new Node();
 }
 
+void Trie::IncreaseFrequency(string Word)
+{
+    Node* current = root;
+
+    for (char letter : Word)
+    {
+        if (!current->letters[letter])
+            return;
+
+        current = current->letters[letter];
+    }
+
+    if (current->EndWord)
+        current->Frequency++;
+}
+
 void Trie::Insert(string Word, bool isInsertFromFile)
 {
 
@@ -121,126 +137,122 @@ bool Trie::Search(string Word , string Type)
       
 }
 
-void Trie::DisplayByBFS(string Prefix)
+vector<string> Trie::DisplayByBFS(string Prefix)
 {
+    vector<string> Words;
     Prefix = CaseSensitivity(Prefix);
 
     if (!ValidateWord(Prefix))
     {
         cout << "The Word \"" << Prefix << "\" Invalid\n";
-        return;
+        return Words;
     }
 
-  
     if (!Search(Prefix, "prefix"))
     {
         cout << "The Word \"" << Prefix << "\" Doesn't Exist\n";
-        return;
+        return Words;
     }
-    Node* Current = root;
 
-    for (char letter : Prefix)
-    {
-        Current = Current->letters[letter];
-    }
+    Node* Current = FindNode(Prefix);
+    if (!Current)
+        return Words;
 
     queue<pair<Node*, string>> q;
-
     q.push({ Current, Prefix });
 
     while (!q.empty())
     {
         auto front = q.front();
-
         q.pop();
         Node* node = front.first;
         string Word = front.second;
 
         if (node->EndWord)
         {
-            if (Word == Prefix)
-                cout << "*" << Word << "*" << endl;
-            else
-                cout << Word << endl;
+            Words.push_back(Word);
         }
 
-
-        for (auto pair : node->letters)
+        for (auto& pair : node->letters)
+        {
             q.push({ pair.second, Word + pair.first });
-
+        }
     }
+
+    return Words;
 }
 
-void Trie::DisplayByDFS(string Prefix)
+
+vector<string> Trie::DisplayByDFS(string Prefix)
 {
+    vector<string> Words;
     Prefix = CaseSensitivity(Prefix);
 
     if (!ValidateWord(Prefix))
     {
         cout << "The Word \"" << Prefix << "\" Invalid\n";
-        return;
+        return Words;
     }
 
     if (!Search(Prefix, "prefix"))
     {
         cout << "The Word \"" << Prefix << "\" Doesn't Exist\n";
-        return;
+        return Words;
     }
 
     Node* startNode = FindNode(Prefix);
-    string currentWord = Prefix;
-
+    if (!startNode)
+        return Words;
 
     stack<pair<Node*, string>> nodeStack;
-    nodeStack.push({ startNode, currentWord });
+    nodeStack.push({ startNode, Prefix });
 
-    while (!nodeStack.empty()) {
+    while (!nodeStack.empty())
+    {
         auto pairTop = nodeStack.top();
         Node* node = pairTop.first;
         string word = pairTop.second;
         nodeStack.pop();
 
-        if (node->EndWord) {
-            if (word == Prefix)
-                cout << "*" << word << "*" << endl;
-            else
-                cout << word << endl;
+        if (node->EndWord)
+        {
+            Words.push_back(word);
         }
 
-       
         vector<pair<char, Node*>> sortedLetters(node->letters.begin(), node->letters.end());
         sort(sortedLetters.rbegin(), sortedLetters.rend());
 
-        for (auto& pair : sortedLetters) {
+        for (auto& pair : sortedLetters)
+        {
             nodeStack.push({ pair.second, word + pair.first });
         }
     }
 
-
+    return Words;
 }
 
-
-void Trie::DisplayByFrequecy(string Prefix)
+vector<string> Trie::DisplayByFrequecy(string Prefix)
 {
+    vector<string> Words;
     Prefix = CaseSensitivity(Prefix);
 
     if (!ValidateWord(Prefix))
     {
         cout << "The Word \"" << Prefix << "\" Invalid\n";
-        return;
+        return Words;
     }
-
 
     if (!Search(Prefix, "prefix"))
     {
         cout << "The Word \"" << Prefix << "\" Doesn't Exist\n";
-        return;
+        return Words;
     }
 
     Node* Current = FindNode(Prefix);
+    if (!Current)
+        return Words;
 
     queue<pair<Node*, string>> q;
-
     vector<pair<string, int>> WordsAndFrequency;
 
     q.push({ Current, Prefix });
@@ -248,34 +260,29 @@ void Trie::DisplayByFrequecy(string Prefix)
     while (!q.empty())
     {
         auto front = q.front();
-
         q.pop();
         Node* node = front.first;
         string Word = front.second;
 
         if (node->EndWord)
-            WordsAndFrequency.push_back({ Word,node->Frequency });
+            WordsAndFrequency.push_back({ Word, node->Frequency });
 
-
-        for (auto pair : node->letters)
+        for (auto& pair : node->letters)
             q.push({ pair.second, Word + pair.first });
-
     }
 
     sort(WordsAndFrequency.begin(), WordsAndFrequency.end(), [](const pair<string, int>& a, const pair<string, int>& b) {
-        return a.second > b.second; 
+        return a.second > b.second;
         });
-
 
     for (const auto& pair : WordsAndFrequency)
     {
-        if (pair.first == Prefix)
-            cout << "*" << pair.first << "*" << endl;
-        else
-            cout << pair.first << endl;
+        Words.push_back(pair.first);
     }
 
+    return Words;
 }
+
 void Trie::saveToFiles(string Prefix,vector<pair<string,int>>&p)
 {
     
@@ -311,19 +318,41 @@ void Trie::saveToFiles(string Prefix,vector<pair<string,int>>&p)
     p = WordsAndFrequency;  
 }
 void Trie::getsuggestions(string prefix, int operation) {
+    vector<string> Words;
+
     if (operation == 1) {
-		DisplayByFrequecy(prefix);
-	}
+        Words = DisplayByFrequecy(prefix);
+    }
     else if (operation == 2) {
-		DisplayByBFS(prefix);
-	}
+        Words = DisplayByBFS(prefix);
+    }
     else if (operation == 3) {
-		DisplayByDFS(prefix);
-	}
+        Words = DisplayByDFS(prefix);
+    }
     else {
-		cout << "Invalid operation." << endl;
-	}
+        cout << "Invalid operation." << endl;
+        return;
+    }
+
+    if (Words.empty()) {
+        cout << "No suggestions found for the prefix \"" << prefix << "\"." << endl;
+        return;
+    }
+
+    cout << "Suggestions for \"" << prefix << "\":" << endl;
+
+    int counter = 1;
+
+    for (const auto& word : Words) {
+
+        cout << counter++ << "-";
+        if (word == prefix)
+            cout << "*" << word << "*" << endl;
+        else
+            cout << word << endl;
+    }
 }
+
 
 
 Node* Trie::FindNode(string Prefix)

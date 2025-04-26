@@ -139,6 +139,9 @@
     <ClInclude Include="SpellChecker.h" />
     <ClInclude Include="Trie.h" />
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="Dictionary.txt" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

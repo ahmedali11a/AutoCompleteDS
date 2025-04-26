@@ -1,5 +1,8 @@
 #include<iostream>
 #include<algorithm>
+#include<vector>
+#include<string>
+#include <limits>
 #include<fstream>
 #include"Node.h"
 #include"Trie.h"
@@ -14,8 +17,8 @@ int main()
     Files fileHandler("Dictionary.txt");
     fileHandler.Load(trie);
     string input;
-    //transform(input.begin(), input.end(), input.begin(), ::tolower);
-    int choice, sortOption;
+    int choice, sortOption , searchWord;
+    vector<string> Words;
 
     while (true) {
         cout << "\nAutocomplete Menu:\n";
@@ -25,7 +28,7 @@ int main()
         cout << "5. Exit\n";
         cout << "Enter choice: ";
         cin >> choice;
-        cin.ignore();
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
 
         if (choice == 5) {
             fileHandler.Save(trie);
@@ -50,6 +53,16 @@ int main()
                 sortOption = 1; // Default to frequency
             }
             trie.getsuggestions(input, sortOption);
+            if (sortOption == 2)
+                Words = trie.DisplayByBFS(input);
+            else if (sortOption == 3)
+                Words = trie.DisplayByDFS(input);
+            else if (sortOption == 1)
+                Words = trie.DisplayByFrequecy(input);
+
+            cout << "The Word You Are Looking For :";
+            cin >> searchWord;
+            trie.IncreaseFrequency(Words[searchWord - 1]);
             break;
         case 2:
             cout << "Enter word to add: ";
