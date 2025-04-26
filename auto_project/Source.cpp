@@ -1,4 +1,5 @@
 #include<iostream>
+#include<algorithm>
 #include<fstream>
 #include"Node.h"
 #include"Trie.h"
@@ -13,6 +14,7 @@ int main()
     Files fileHandler("Dictionary.txt");
     fileHandler.Load(trie);
     string input;
+    //transform(input.begin(), input.end(), input.begin(), ::tolower);
     int choice, sortOption;
 
     while (true) {
