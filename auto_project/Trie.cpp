@@ -212,11 +212,8 @@ void Trie::DisplayByDFS(string Prefix)
         }
 
 
-        // Collect children in ascending order
-        vector<pair<char, Node*>> children(node->letters.begin(), node->letters.end());
-        // Push in reverse order so stack pops in ascending order
-        for (auto it = children.rbegin(); it != children.rend(); ++it) {
-            nodeStack.push({ it->second, word + it->first });
+       for (auto& pair : node->letters) {
+       	    nodeStack.push({ pair.second, word + pair.first });
         }
     }
 
