@@ -4,13 +4,15 @@
 #include<stack>
 #include<string>
 #include<algorithm>
+#include<utility>
+#include<vector>
 
 Trie::Trie()
 {
     root = new Node();
 }
 
-void Trie::Insert(string Word)
+void Trie::Insert(string Word, bool isInsertFromFile)
 {
 
     Word = CaseSensitivity(Word);
@@ -21,7 +23,7 @@ void Trie::Insert(string Word)
         return;
     }
 
-    if (Search(Word,"word"))
+    if (Search(Word, "word"))
         cout << "The Word \"" << Word << "\" Already Exist\n";
 
     Node* current = root;
@@ -36,7 +38,55 @@ void Trie::Insert(string Word)
     }
     current->EndWord = true;
     current->Frequency++;
+    if (!isInsertFromFile) {
+        cout << "The Word \"" << Word << "\" Inserted Successfully\n";
+    }
 }
+
+void Trie::DeleteWord(string word) {
+    word = CaseSensitivity(word);
+
+    if (!ValidateWord(word)) {
+        cout << "The Word \"" << word << "\" Invalid\n";
+        return;
+    }
+
+    if (!Search(word, "word")) {
+        cout << "The Word \"" << word << "\" Doesn't Exist\n";
+        return;
+    }
+
+    Node* current = root;
+    vector<pair<Node*, char>> path;
+    for (char letter : word) {
+        if (!current->letters[letter]) {
+            cout << "Error: Word '" << word << "' not found during traversal.\n";
+            return;
+        }
+        path.push_back({ current, letter }); 
+        current = current->letters[letter];
+    }
+
+    current->EndWord = false;
+    current->Frequency = 0;
+
+    while (!path.empty()) {
+        auto i = path.back();
+        Node* child = i.first;
+        path.pop_back();
+
+        if (child->letters.empty() && !child->EndWord) {
+            delete child; 
+            i.first->letters.erase(i.second); 
+        }
+        else {
+            break;
+        }
+    }
+
+    cout << "Word '" << word << "' deleted successfully.\n";
+}
+
 
 bool Trie::Search(string Word , string Type)
 {
@@ -140,7 +190,7 @@ void Trie::DisplayByDFS(string Prefix)
     Node* startNode = FindNode(Prefix);
     string currentWord = Prefix;
 
-   
+
     stack<pair<Node*, string>> nodeStack;
     nodeStack.push({ startNode, currentWord });
 
@@ -152,8 +202,8 @@ void Trie::DisplayByDFS(string Prefix)
 
         nodeStack.pop();
 
-        
-        if (node->EndWord) 
+
+        if (node->EndWord)
         {
             if (word == Prefix)
                 cout << "*" << word << "*" << endl;
@@ -161,11 +211,15 @@ void Trie::DisplayByDFS(string Prefix)
                 cout << word << endl;
         }
 
-      
-        for (auto& pair : node->letters) {
-            nodeStack.push({ pair.second, word + pair.first });
+
+        // Collect children in ascending order
+        vector<pair<char, Node*>> children(node->letters.begin(), node->letters.end());
+        // Push in reverse order so stack pops in ascending order
+        for (auto it = children.rbegin(); it != children.rend(); ++it) {
+            nodeStack.push({ it->second, word + it->first });
         }
     }
+
 }
 
 
@@ -224,6 +278,54 @@ void Trie::DisplayByFrequecy(string Prefix)
             cout << pair.first << endl;
     }
 
+}
+void Trie::saveToFiles(string Prefix,vector<pair<string,int>>&p)
+{
+    
+    Node* Current = root;  
+
+    queue<pair<Node*, string>> q;
+
+    vector<pair<string, int>> WordsAndFrequency;
+
+    q.push({ Current, Prefix });
+
+    while (!q.empty())
+    {
+        auto front = q.front();
+
+        q.pop();
+        Node* node = front.first;
+        string Word = front.second;
+
+        if (node->EndWord)
+            WordsAndFrequency.push_back({ Word,node->Frequency });
+
+
+        for (auto pair : node->letters)
+            q.push({ pair.second, Word + pair.first });
+
+    }
+
+    sort(WordsAndFrequency.begin(), WordsAndFrequency.end(), [](const pair<string, int>& a, const pair<string, int>& b) {
+        return a.second > b.second;
+        });
+
+    p = WordsAndFrequency;  
+}
+void Trie::getsuggestions(string prefix, int operation) {
+    if (operation == 1) {
+		DisplayByFrequecy(prefix);
+	}
+    else if (operation == 2) {
+		DisplayByBFS(prefix);
+	}
+    else if (operation == 3) {
+		DisplayByDFS(prefix);
+	}
+    else {
+		cout << "Invalid operation." << endl;
+	}
 }
 
 

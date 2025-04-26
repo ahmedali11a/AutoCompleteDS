@@ -1,44 +1,66 @@
 #include<iostream>
+#include<fstream>
 #include"Node.h"
 #include"Trie.h"
+#include"Files.h"
+
 using namespace std;
 
 int main()
 {
 
-	Trie trie;
+    Trie trie;
+    Files fileHandler("C:\\Users\\workstation\\source\\repos\\AutoCompleteDS\\Dictionary.txt");
+    fileHandler.Load(trie);
+    string input;
+    int choice, sortOption;
 
-	trie.Insert("Ahmed");
-	trie.Insert("ali");
-	trie.Insert("aly");
-	trie.Insert("Ahmed");
-	trie.Insert("soliman");
-	trie.Insert("soqiman");
-	trie.Insert("soliman");
-	trie.Insert("Ahmed");
-	trie.Insert("ahmad");
-	trie.Insert("ahm");
+    while (true) {
+        cout << "\nAutocomplete Menu:\n";
+        cout << "1. Get suggestions\n";
+        cout << "2. Add word\n";
+        cout << "3. Delete word\n";
+        cout << "5. Exit\n";
+        cout << "Enter choice: ";
+        cin >> choice;
+        cin.ignore();
 
-	string prefix;
+        if (choice == 5) {
+            fileHandler.Save(trie);
+            break;
+        }
 
-	
-
-	
-
-	for(int i=0;i<3;i++)
-	{
-		cin >> prefix;
-
-	
-
-		trie.DisplayByBFS(prefix);
-		cout << "===================\n";
-		trie.DisplayByDFS(prefix);
-		cout << "===================\n";
-		trie.DisplayByFrequecy(prefix);
-		cout << "===================\n";
-
-	}
-
-	return 0;
+        switch (choice) {
+        case 1:
+            cout << "Enter prefix: ";
+            getline(cin, input);
+            if (input.empty()) {
+                cout << "Error: Empty input." << endl;
+                break;
+            }
+            cout << "Sort options:\n";
+            cout << "1. By frequency (default)\n";
+            cout << "2. By length (shortest first)\n";
+            cout << "3. Lexicographical order\n";
+            cout << "Enter sort option: ";
+            cin >> sortOption;
+            if (sortOption < 1 || sortOption > 3) {
+                sortOption = 1; // Default to frequency
+            }
+            trie.getsuggestions(input, sortOption);
+            break;
+        case 2:
+            cout << "Enter word to add: ";
+            getline(cin, input);
+            trie.Insert(input,false);
+            break;
+        case 3:
+            cout << "Enter word to delete: ";
+			getline(cin, input);
+			trie.DeleteWord(input);
+			break;
+        default:
+            cout << "Error: Invalid choice." << endl;
+        }
+    }
 }

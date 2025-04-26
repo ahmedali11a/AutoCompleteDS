@@ -1,5 +1,11 @@
 #pragma once
 #include"Trie.h"
+#include<fstream>
+#include<iostream>
+#include<string>
+#include<vector>
+
+
 class Files
 {
 	string File;

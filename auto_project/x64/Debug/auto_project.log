@@ -1,3 +1,6 @@
 ﻿  Trie.cpp
-E:\DS_Project\auto_project\auto_project\Trie.cpp(72): warning C4715: 'Trie::Search': not all control paths return a value
-  auto_project.vcxproj -> E:\DS_Project\auto_project\x64\Debug\auto_project.exe
+C:\Users\workstation\source\repos\AutoCompleteDS\auto_project\Trie.cpp(216,21): error C2062: type 'char' unexpected
+C:\Users\workstation\source\repos\AutoCompleteDS\auto_project\Trie.cpp(216,32): error C2059: syntax error: '>'
+C:\Users\workstation\source\repos\AutoCompleteDS\auto_project\Trie.cpp(218,24): error C2065: 'children': undeclared identifier
+C:\Users\workstation\source\repos\AutoCompleteDS\auto_project\Trie.cpp(218,43): error C3536: 'it': cannot be used before it is initialized
+C:\Users\workstation\source\repos\AutoCompleteDS\auto_project\Trie.cpp(218,49): error C2065: 'children': undeclared identifier
