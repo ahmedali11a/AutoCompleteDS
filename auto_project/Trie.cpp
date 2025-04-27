@@ -39,9 +39,10 @@ void Trie::Insert(string Word, bool isInsertFromFile)
         return;
     }
 
-    if (Search(Word, "word"))
+    if (Search(Word, "word")){
         cout << "The Word \"" << Word << "\" Already Exist\n";
-
+        return;
+    }
     Node* current = root;
 
     for (char letter : Word)
